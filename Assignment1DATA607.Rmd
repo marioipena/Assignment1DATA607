@@ -1,0 +1,68 @@
+---
+title: "Assignment 1 DATA607"
+output:
+  html_document: default
+  pdf_document: default
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+## Mario Pena
+## 9/1/2019
+
+A dataset was loaded from the internet onto a data frame from the **Mushrooms** dataset and the following code was implemented: 
+
+
+```{r}
+mushrooms<-read.csv("https://archive.ics.uci.edu/ml/machine-learning-databases/mushroom/agaricus-lepiota.data", header= FALSE, sep=",")
+```
+
+We can see the dimensions of the data. This command should output [1] 8124 23, indicating that there are 8124 rows and 23 columns:
+
+```{r}
+dim(mushrooms)
+```
+
+The column names were changed to reflect their full description:
+
+```{r}
+colnames(mushrooms) <-c("EDIBILITY","CAP-SHAPE","CAP-SURFACE","CAP-COLOR","BRUISES","ODOR","GILL-ATTACHMENT","GILL-SPACING","GILL-SIZE","GILL-COLOR","STALK-SHAPE","STAL-ROOT","STAL-SURFACE-ABOVE-RING", "STALK-SURFACE-BELOW-RING", "STALK-COLOR-ABOVE-RING", "STALK-COLOR-BELOW-RING", "VEIL-TYPE", "VEILCOLOR", "RING-NUMBER", "RING-TYPE", "SPORE-PRINT-COLOR", "POPULATION", "HABITAT")
+```
+
+And now we can see the names:
+
+```{r}
+names(mushrooms)
+```
+
+Some of the characters representing data in the rows were changed to their actual name for a few variables, which will be used in the subset below:
+
+```{r}
+mushrooms$EDIBILITY <- sub("p", "Poisonous", mushrooms$EDIBILITY) 
+mushrooms$ODOR <- sub("m", "Musty", mushrooms$ODOR) 
+mushrooms$POPULATION <- sub("c", "Clustered", mushrooms$POPULATION) 
+mushrooms$HABITAT <- sub("d", "Woods", mushrooms$HABITAT)
+```
+
+A subset of the columns in the dataset was created:
+
+```{r}
+subset(mushrooms, EDIBILITY == "Poisonous" & ODOR == "Musty", select = c(EDIBILITY, ODOR, POPULATION, HABITAT))
+```
+
+What is the mushrooms’ most common veil color? In this case a barplot is used to find the answer:
+
+```{r echo=FALSE}
+mushrooms$VEILCOLOR <- sub("n", "Brown", mushrooms$VEILCOLOR)
+mushrooms$VEILCOLOR <- sub("^o$", "Orange", mushrooms$VEILCOLOR)
+mushrooms$VEILCOLOR <- sub("^w$", "White", mushrooms$VEILCOLOR)
+mushrooms$VEILCOLOR <- sub("y", "Yellow", mushrooms$VEILCOLOR)
+```
+
+```{r}
+barplot(table(mushrooms$VEILCOLOR), ylim=c(0,8000), ylab="Frequency", main="Barplot of Veil Color Distribution")
+```
+
+“White” is the most common veil color by far.
